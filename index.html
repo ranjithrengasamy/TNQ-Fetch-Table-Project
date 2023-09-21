@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TNQ Fetch and Table</title>
+</head>
+<body>
+    <form id="filterForm">
+        <select id="status" name="status">
+            <option value="all">All</option>
+        </select>
+        <button type="button" id="loadButton">Load</button>
+    </form>
+
+    <table id="outputTable">
+        <thead>
+            <tr>
+                <th>Capsule ID</th>
+                <th>Missions Count</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    const statusDropdown = document.getElementById('status');
+    const loadButton = document.getElementById('loadButton');
+
+    const jsonData = [{
+	"type": "Dragon 1.0",
+	"status": "retired",
+	"details": "Reentered after three weeks in orbit",
+	"missions": [{
+		"name": "COTS 1",
+		"flight": 7
+	}],
+	"capsule_id": "dragon1"
+}, {
+	"type": "Dragon 1.0",
+	"status": "retired",
+	"details": "First Dragon spacecraft",
+	"missions": [{
+		"name": "COTS 2",
+		"flight": 8
+	}],
+	"capsule_id": "dragon1"
+}, {
+	"type": "Dragon 1.0",
+	"status": "active",
+	"details": "First of twenty missions flown under the CRS1 contract",
+	"missions": [{
+		"name": "CRS-1",
+		"flight": 9
+	}],
+	"capsule_id": "dragon1"
+}, {
+	"type": "Dragon 1.0",
+	"status": "unknown",
+	"details": null,
+	"missions": [{
+		"name": "CRS-2",
+		"flight": 10
+	}],
+	"capsule_id": "dragon1"
+}];
+
+    const uniqueStatusValues = [...new Set(jsonData.map(item => item.status))];
+    uniqueStatusValues.forEach(status => {
+        const option = document.createElement('option');
+        option.value = status;
+        option.textContent = status;
+        statusDropdown.appendChild(option);
+    });
+	loadButton.addEventListener('click', function () {
+    const selectedStatus = statusDropdown.value;
+    const filteredData = selectedStatus === 'all'
+        ? jsonData
+        : jsonData.filter(item => item.status === selectedStatus);
+
+    const tableBody = document.querySelector('#outputTable tbody');
+    tableBody.innerHTML = '';
+
+    filteredData.forEach(item => {
+        const row = document.createElement('tr');
+        const cell1 = document.createElement('td');
+        cell1.textContent = item.capsule_id;
+        const cell2 = document.createElement('td');
+        cell2.textContent = item.missions.length;
+        const cell3 = document.createElement('td');
+        cell3.textContent = item.details;
+        row.appendChild(cell1);
+        row.appendChild(cell2);
+        row.appendChild(cell3);
+        tableBody.appendChild(row);
+    });
+});
+
+});
+
+    </script>
+</body>
+</html>
